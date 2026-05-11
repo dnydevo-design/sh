@@ -42,7 +42,8 @@ class PcHttpServerService {
 
   Future<void> _handleRequest(HttpRequest request) async {
     final response = request.response;
-    response.headers.set(HttpHeaders.accessControlAllowOriginHeader, '*');
+    // تم استخدام النص المباشر للهيدر لضمان التوافق
+    response.headers.set('Access-Control-Allow-Origin', '*');
 
     try {
       if (request.uri.path == '/') {
@@ -94,10 +95,10 @@ class PcHttpServerService {
             lookupMimeType(file.path) ?? 'application/octet-stream',
           )
           ..set(
-            HttpHeaders.contentDisposition,
+            'content-disposition', // تم التغيير لنص مباشر لتجنب الخطأ
             'attachment; filename="${_escapeHeader(file.name)}"',
           )
-          ..set(HttpHeaders.contentLengthHeader, file.sizeBytes.toString());
+          ..set('content-length', file.sizeBytes.toString());
         await response.addStream(source.openRead());
         await response.close();
         return;
@@ -168,7 +169,8 @@ class PcHttpServerService {
     var count = 0;
     final parts = MimeMultipartTransformer(boundary).bind(request);
     await for (final part in parts) {
-      final disposition = part.headers[HttpHeaders.contentDispositionHeader];
+      // الحل النهائي لخطأ contentDispositionHeader:
+      final disposition = part.headers['content-disposition'];
       if (disposition == null) {
         continue;
       }
@@ -193,7 +195,10 @@ class PcHttpServerService {
     if (Platform.isAndroid) {
       root = Directory('/storage/emulated/0/Download/Fast Share/Web Drop');
       try {
-        return root.create(recursive: true);
+        if (!await root.exists()) {
+          await root.create(recursive: true);
+        }
+        return root;
       } catch (_) {
         final fallback = await getExternalStorageDirectory();
         root = Directory(p.join(fallback!.path, 'Web Drop'));
