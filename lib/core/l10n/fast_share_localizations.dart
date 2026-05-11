@@ -1,0 +1,226 @@
+import 'package:flutter/widgets.dart';
+
+class FastShareLocalizations {
+  const FastShareLocalizations(this.locale);
+
+  final Locale locale;
+
+  static const delegate = _FastShareLocalizationsDelegate();
+
+  static FastShareLocalizations of(BuildContext context) {
+    return Localizations.of<FastShareLocalizations>(
+      context,
+      FastShareLocalizations,
+    )!;
+  }
+
+  bool get isArabic => locale.languageCode == 'ar';
+
+  String t(String key) {
+    return _values[locale.languageCode]?[key] ?? _values['en']![key] ?? key;
+  }
+
+  static const supportedLocales = [
+    Locale('en'),
+    Locale('ar'),
+  ];
+
+  static const _values = {
+    'en': {
+      'app_name': 'Fast Share',
+      'send': 'Send',
+      'receive': 'Receive',
+      'pc': 'PC',
+      'cleanup': 'Cleanup',
+      'settings': 'Settings',
+      'profile': 'Profile',
+      'username': 'Username',
+      'avatar': 'Avatar',
+      'create_profile': 'Create profile',
+      'fast_id': 'Fast ID',
+      'trusted_devices': 'Trusted devices',
+      'radar': 'Radar',
+      'scan_nearby': 'Scan nearby',
+      'incognito_mode': 'Incognito mode',
+      'shake_to_share': 'Shake to Share',
+      'vault': 'Vault',
+      'encrypt_selected': 'Encrypt selected',
+      'decrypt': 'Decrypt',
+      'password': 'Password',
+      'chat': 'Chat',
+      'message': 'Message',
+      'send_message': 'Send message',
+      'clipboard_sync': 'Clipboard Sync',
+      'tools': 'Tools',
+      'compress': 'Compress',
+      'scheduled_transfer': 'Scheduled Transfer',
+      'remote_camera': 'Remote Camera',
+      'live_preview': 'Live Preview',
+      'web_drop': 'Web Drop',
+      'permissions_title': 'Set up secure sharing',
+      'permissions_subtitle': 'Fast Share needs a few permissions before it can discover nearby devices, scan QR codes, and move large files safely.',
+      'storage_title': 'Storage access',
+      'storage_body': 'Choose files and save incoming transfers, including files larger than 4GB.',
+      'location_title': 'Location for nearby discovery',
+      'location_body': 'Android requires location permission for Wi-Fi Direct and Bluetooth nearby discovery.',
+      'bluetooth_title': 'Bluetooth discovery',
+      'bluetooth_body': 'Find nearby devices quickly before the high-speed local transfer begins.',
+      'camera_title': 'Camera for QR join',
+      'camera_body': 'Scan a sender QR code to connect without typing addresses.',
+      'grant_permission': 'Grant permission',
+      'continue': 'Continue',
+      'open_settings': 'Open settings',
+      'done': 'Done',
+      'pick_files': 'Pick files',
+      'selected_files': 'Selected files',
+      'no_files': 'No files selected yet',
+      'start_session': 'Start session',
+      'scan_qr': 'Scan QR',
+      'waiting_peer': 'Waiting for the receiver',
+      'show_qr': 'Show this QR code to the receiver.',
+      'transport_socket': 'Wi-Fi Direct discovery is active; transfer will stream over the local socket.',
+      'transport_hotspot': 'Wi-Fi Direct was unavailable, so Fast Share switched to local hotspot/LAN mode.',
+      'dashboard': 'Dashboard',
+      'speed': 'Speed',
+      'eta': 'Time left',
+      'progress': 'Progress',
+      'completed': 'Completed',
+      'failed': 'Failed',
+      'preparing': 'Preparing',
+      'transferring': 'Transferring',
+      'idle': 'Idle',
+      'apps': 'Apps',
+      'videos': 'Videos',
+      'photos': 'Photos',
+      'docs': 'Docs',
+      'archives': 'Archives',
+      'other': 'Other',
+      'all': 'All',
+      'pc_title': 'PC browser sharing',
+      'pc_body': 'Start a local web server and open the link from a computer on the same Wi-Fi.',
+      'start_pc_server': 'Start PC server',
+      'stop_pc_server': 'Stop server',
+      'server_running': 'Server running',
+      'smart_cleanup': 'Smart Cleanup',
+      'cleanup_body': 'Review large transferred files and installers that may be safe to delete.',
+      'build_suggestions': 'Build suggestions',
+      'delete_selected': 'Delete selected',
+      'theme': 'Theme',
+      'language': 'Language',
+      'dark': 'Dark',
+      'light': 'Light',
+      'english': 'English',
+      'arabic': 'Arabic',
+      'copied': 'Copied',
+      'open': 'Open',
+      'remove': 'Remove',
+      'retry': 'Retry',
+    },
+    'ar': {
+      'app_name': 'فاست شير',
+      'send': 'إرسال',
+      'receive': 'استقبال',
+      'pc': 'الكمبيوتر',
+      'cleanup': 'تنظيف',
+      'settings': 'الإعدادات',
+      'profile': 'الملف الشخصي',
+      'username': 'اسم المستخدم',
+      'avatar': 'الصورة الرمزية',
+      'create_profile': 'إنشاء ملف',
+      'fast_id': 'Fast ID',
+      'trusted_devices': 'الأجهزة الموثوقة',
+      'radar': 'الرادار',
+      'scan_nearby': 'فحص الأجهزة',
+      'incognito_mode': 'وضع التخفي',
+      'shake_to_share': 'هز للمشاركة',
+      'vault': 'الخزنة',
+      'encrypt_selected': 'تشفير المحدد',
+      'decrypt': 'فك التشفير',
+      'password': 'كلمة المرور',
+      'chat': 'المحادثة',
+      'message': 'رسالة',
+      'send_message': 'إرسال رسالة',
+      'clipboard_sync': 'مزامنة الحافظة',
+      'tools': 'الأدوات',
+      'compress': 'ضغط',
+      'scheduled_transfer': 'نقل مجدول',
+      'remote_camera': 'كاميرا عن بعد',
+      'live_preview': 'معاينة مباشرة',
+      'web_drop': 'Web Drop',
+      'permissions_title': 'إعداد مشاركة آمنة',
+      'permissions_subtitle': 'يحتاج فاست شير إلى بعض الأذونات لاكتشاف الأجهزة القريبة، ومسح QR، ونقل الملفات الكبيرة بأمان.',
+      'storage_title': 'إذن التخزين',
+      'storage_body': 'اختيار الملفات وحفظ الملفات المستقبلة، بما في ذلك الملفات الأكبر من 4GB.',
+      'location_title': 'الموقع للاكتشاف القريب',
+      'location_body': 'يتطلب أندرويد إذن الموقع لاكتشاف Wi-Fi Direct وBluetooth.',
+      'bluetooth_title': 'اكتشاف البلوتوث',
+      'bluetooth_body': 'العثور على الأجهزة القريبة بسرعة قبل بدء النقل المحلي عالي السرعة.',
+      'camera_title': 'الكاميرا للانضمام عبر QR',
+      'camera_body': 'امسح رمز QR الخاص بالمرسل للاتصال بدون كتابة عناوين.',
+      'grant_permission': 'منح الإذن',
+      'continue': 'متابعة',
+      'open_settings': 'فتح الإعدادات',
+      'done': 'تم',
+      'pick_files': 'اختيار ملفات',
+      'selected_files': 'الملفات المختارة',
+      'no_files': 'لم يتم اختيار ملفات بعد',
+      'start_session': 'بدء الجلسة',
+      'scan_qr': 'مسح QR',
+      'waiting_peer': 'بانتظار جهاز الاستقبال',
+      'show_qr': 'اعرض رمز QR هذا لجهاز الاستقبال.',
+      'transport_socket': 'اكتشاف Wi-Fi Direct نشط، وسيتم النقل عبر اتصال محلي مباشر.',
+      'transport_hotspot': 'تعذر استخدام Wi-Fi Direct، لذلك انتقل فاست شير إلى وضع الشبكة المحلية أو نقطة الاتصال.',
+      'dashboard': 'لوحة النقل',
+      'speed': 'السرعة',
+      'eta': 'الوقت المتبقي',
+      'progress': 'التقدم',
+      'completed': 'اكتمل',
+      'failed': 'فشل',
+      'preparing': 'جار التحضير',
+      'transferring': 'جار النقل',
+      'idle': 'جاهز',
+      'apps': 'تطبيقات',
+      'videos': 'فيديو',
+      'photos': 'صور',
+      'docs': 'مستندات',
+      'archives': 'أرشيف',
+      'other': 'أخرى',
+      'all': 'الكل',
+      'pc_title': 'مشاركة عبر متصفح الكمبيوتر',
+      'pc_body': 'ابدأ خادمًا محليًا وافتح الرابط من كمبيوتر على نفس شبكة Wi-Fi.',
+      'start_pc_server': 'بدء خادم الكمبيوتر',
+      'stop_pc_server': 'إيقاف الخادم',
+      'server_running': 'الخادم يعمل',
+      'smart_cleanup': 'تنظيف ذكي',
+      'cleanup_body': 'راجع الملفات الكبيرة وملفات التثبيت التي قد يكون حذفها آمنًا بعد النقل.',
+      'build_suggestions': 'إنشاء اقتراحات',
+      'delete_selected': 'حذف المحدد',
+      'theme': 'المظهر',
+      'language': 'اللغة',
+      'dark': 'داكن',
+      'light': 'فاتح',
+      'english': 'English',
+      'arabic': 'العربية',
+      'copied': 'تم النسخ',
+      'open': 'فتح',
+      'remove': 'إزالة',
+      'retry': 'إعادة المحاولة',
+    },
+  };
+}
+
+class _FastShareLocalizationsDelegate
+    extends LocalizationsDelegate<FastShareLocalizations> {
+  const _FastShareLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) => ['en', 'ar'].contains(locale.languageCode);
+
+  @override
+  Future<FastShareLocalizations> load(Locale locale) async {
+    return FastShareLocalizations(locale);
+  }
+
+  @override
+  bool shouldReload(_FastShareLocalizationsDelegate old) => false;
+}

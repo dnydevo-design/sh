@@ -1,0 +1,53 @@
+name: fast_share
+description: Fast Share is a clean Flutter P2P file transfer app with QR join, chunked sockets, PC downloads, and smart cleanup.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.9.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  archive: ^4.0.9
+  camera: ^0.12.0+1
+  cryptography: ^2.9.0
+  crypto: ^3.0.7
+  file_picker: ^11.0.2
+  flutter_local_notifications: ^21.0.0
+  flutter_screenutil: ^5.9.3
+  flutter_svg: ^2.2.4
+  mime: ^2.0.0
+  mobile_scanner: ^7.2.0
+  nearby_connections: ^4.3.0
+  open_filex: ^4.7.0
+  path: ^1.9.1
+  path_provider: ^2.1.5
+  permission_handler: ^12.0.1
+  provider: ^6.1.5+1
+  qr_flutter: ^4.1.0
+  sensors_plus: ^7.0.0
+  shared_preferences: ^2.5.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.14.4
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icon/fast_share_icon.svg
+    - assets/icon/fast_share_icon.png
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/fast_share_icon.png
+  adaptive_icon_background: '#000000'
+  adaptive_icon_foreground: assets/icon/fast_share_icon.png
+  min_sdk_android: 23
