@@ -17,16 +17,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17' # الإصدار الأكثر استقراراً لبناء تطبيقات أندرويد حالياً
+          java-version: '17'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          # سيقوم تلقائياً بتحميل أحدث نسخة مستقرة تتوافق مع SDK 3.9.0+
+          flutter-version: '3.22.0' # تم تثبيت النسخة لضمان عمل الكود دون أخطاء المسميات الجديدة
 
       - name: Install dependencies
         run: flutter pub get
@@ -36,11 +36,9 @@ jobs:
 
       - name: Build APK
         run: flutter build apk --release --no-tree-shake-icons
-        # أضفت no-tree-shake-icons لتجنب مشاكل أيقونات الـ SVG أو الأيقونات المخصصة
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: FastShare-App-Release
           path: build/app/outputs/flutter-apk/app-release.apk
-
