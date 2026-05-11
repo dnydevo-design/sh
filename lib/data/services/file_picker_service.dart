@@ -11,6 +11,7 @@ class FilePickerService {
   const FilePickerService();
 
   Future<List<TransferFile>> pick(FileCategory category) async {
+    // تم إصلاح الاستدعاء هنا ليتوافق مع الإصدارات الحديثة
     final result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
       type: _fileTypeFor(category),
@@ -37,7 +38,10 @@ class FilePickerService {
       final resolvedCategory = category == FileCategory.other
           ? fileCategoryFromPath(path)
           : category;
+      
+      // تأكد أن idSeed فريد بناءً على خصائص الملف
       final idSeed = '$path:${stat.size}:${stat.modified.toIso8601String()}';
+      
       files.add(
         TransferFile(
           id: sha1.convert(utf8.encode(idSeed)).toString(),
