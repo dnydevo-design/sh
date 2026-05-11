@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.0 <4.0.0' # تم تقليل الإصدار ليعمل على أي نسخة Flutter 3.x
+  sdk: '>=3.4.0 <4.0.0' # النسخة المتوافقة مع Flutter 3.22.0
 
 dependencies:
   flutter:
@@ -36,7 +36,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.14.4
-  flutter_lints: ^6.0.0
+  # قمت بتنزيل نسخة الـ lints لتعمل مع Dart 3.4.0
+  flutter_lints: ^3.0.0 
 
 flutter:
   uses-material-design: true
