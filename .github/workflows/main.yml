@@ -3,7 +3,10 @@ name: Build Fast Share APK
 on:
   push:
     branches:
-      - main # أو اسم الفرع الأساسي عندك
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -16,26 +19,27 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: 'temurin'
+          java-version: '17' # الإصدار الأكثر استقراراً لبناء تطبيقات أندرويد حالياً
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.9.0' # متوافق مع البيئة الخاصة بك
           channel: 'stable'
+          # سيقوم تلقائياً بتحميل أحدث نسخة مستقرة تتوافق مع SDK 3.9.0+
 
-      - name: Get dependencies
+      - name: Install dependencies
         run: flutter pub get
 
-      - name: Generate Icons # لأنك تستخدم flutter_launcher_icons
+      - name: Generate Launcher Icons
         run: flutter pub run flutter_launcher_icons
 
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release --no-tree-shake-icons
+        # أضفت no-tree-shake-icons لتجنب مشاكل أيقونات الـ SVG أو الأيقونات المخصصة
 
-      - name: Upload Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: FastShare-Release
+          name: FastShare-App-Release
           path: build/app/outputs/flutter-apk/app-release.apk
