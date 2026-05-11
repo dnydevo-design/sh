@@ -1,5 +1,4 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 import '../../domain/entities/transfer_progress.dart';
 
 class TransferNotificationService {
@@ -16,18 +15,22 @@ class TransferNotificationService {
     const settings = InitializationSettings(
       android: AndroidInitializationSettings('launch_icon'),
     );
-    await _plugin.initialize(settings);
+    
+    // تم التعديل هنا: إضافة اسم المعامل initializationSettings
+    await _plugin.initialize(initializationSettings: settings);
     _initialized = true;
   }
 
   Future<void> showTransfer(TransferProgress progress) async {
     await initialize();
     final percent = (progress.fraction * 100).round().clamp(0, 100).toInt();
+    
+    // تم التعديل هنا: تحويل جميع القيم إلى Named Parameters
     await _plugin.show(
-      1001,
+      1001, // الـ ID يبقى كما هو كـ positional
       'Fast Share',
       progress.currentFileName ?? progress.phase.name,
-      NotificationDetails(
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           'fast_share_transfers',
           'Fast Share transfers',
@@ -43,5 +46,6 @@ class TransferNotificationService {
     );
   }
 
-  Future<void> clearTransfer() => _plugin.cancel(1001);
+  // تم التعديل هنا: دالة الـ cancel في الإصدارات الجديدة
+  Future<void> clearTransfer() => _plugin.cancel(id: 1001);
 }
