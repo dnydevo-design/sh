@@ -43,3 +43,4 @@ jobs:
         with:
           name: FastShare-App-Release
           path: build/app/outputs/flutter-apk/app-release.apk
+
