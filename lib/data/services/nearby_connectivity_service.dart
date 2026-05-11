@@ -30,7 +30,7 @@ class NearbyConnectivityService {
   Future<bool> startDiscovery({
     required String userName,
     required void Function(PeerEndpoint endpoint) onEndpointFound,
-    required void Function(String endpointId) onEndpointLost,
+    required void Function(String? endpointId) onEndpointLost, // تم التعديل هنا لإضافة ?
   }) {
     return _nearby.startDiscovery(
       userName,
@@ -40,7 +40,7 @@ class NearbyConnectivityService {
           PeerEndpoint(id: id, name: name, serviceId: serviceId),
         );
       },
-      onEndpointLost: onEndpointLost,
+      onEndpointLost: onEndpointLost, // الآن الأنواع متطابقة (String?)
       serviceId: AppConstants.nearbyServiceId,
     );
   }
