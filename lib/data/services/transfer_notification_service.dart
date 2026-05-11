@@ -15,22 +15,18 @@ class TransferNotificationService {
     const settings = InitializationSettings(
       android: AndroidInitializationSettings('launch_icon'),
     );
-    
-    // تم التعديل هنا: إضافة اسم المعامل initializationSettings
-    await _plugin.initialize(initializationSettings: settings);
+    await _plugin.initialize(settings);
     _initialized = true;
   }
 
   Future<void> showTransfer(TransferProgress progress) async {
     await initialize();
     final percent = (progress.fraction * 100).round().clamp(0, 100).toInt();
-    
-    // تم التعديل هنا: تحويل جميع القيم إلى Named Parameters
     await _plugin.show(
-      1001, // الـ ID يبقى كما هو كـ positional
+      1001,
       'Fast Share',
       progress.currentFileName ?? progress.phase.name,
-      notificationDetails: NotificationDetails(
+      NotificationDetails(
         android: AndroidNotificationDetails(
           'fast_share_transfers',
           'Fast Share transfers',
@@ -46,6 +42,5 @@ class TransferNotificationService {
     );
   }
 
-  // تم التعديل هنا: دالة الـ cancel في الإصدارات الجديدة
-  Future<void> clearTransfer() => _plugin.cancel(id: 1001);
+  Future<void> clearTransfer() => _plugin.cancel(1001);
 }
