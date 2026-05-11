@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.4.0 <4.0.0' # النسخة المتوافقة مع Flutter 3.22.0
+  sdk: '>=3.4.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -24,7 +24,8 @@ dependencies:
   mobile_scanner: ^7.2.0
   nearby_connections: ^4.3.0
   open_filex: ^4.7.0
-  path: ^1.9.1
+  # تم تغييرها لـ 1.9.0 لحل الصراع مع flutter_test
+  path: 1.9.0 
   path_provider: ^2.1.5
   permission_handler: ^12.0.1
   provider: ^6.1.5+1
@@ -36,7 +37,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.14.4
-  # قمت بتنزيل نسخة الـ lints لتعمل مع Dart 3.4.0
   flutter_lints: ^3.0.0 
 
 flutter:
