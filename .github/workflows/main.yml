@@ -1,0 +1,41 @@
+name: Build Fast Share APK
+
+on:
+  push:
+    branches:
+      - main # أو اسم الفرع الأساسي عندك
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.9.0' # متوافق مع البيئة الخاصة بك
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Generate Icons # لأنك تستخدم flutter_launcher_icons
+        run: flutter pub run flutter_launcher_icons
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FastShare-Release
+          path: build/app/outputs/flutter-apk/app-release.apk
