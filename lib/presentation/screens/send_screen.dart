@@ -339,3 +339,34 @@ class _FastZipSendButtonState extends State<_FastZipSendButton> {
     }
   }
 }
+
+class _HeroPanel extends StatelessWidget {
+  const _HeroPanel({
+    required this.title,
+    required this.subtitle,
+  });
+
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassPanel(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.send_rounded, color: AppTheme.electricBlue, size: 42.sp),
+          SizedBox(height: 16.h),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
+          ),
+          SizedBox(height: 8.h),
+          Text(subtitle),
+        ],
+      ),
+    );
+  }
+}
