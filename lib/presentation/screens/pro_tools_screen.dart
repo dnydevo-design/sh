@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/l10n/l10n_extension.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/utils/file_formatters.dart';
 import '../controllers/file_selection_controller.dart';
 import '../controllers/profile_controller.dart';
@@ -21,6 +22,30 @@ class ProToolsScreen extends StatelessWidget {
     final files = context.watch<FileSelectionController>();
     final profile = context.watch<ProfileController>();
     final l10n = context.l10n;
+
+    // Show success snackbar when compression completes
+    if (tools.compressionSuccess && tools.zipPath != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle_rounded, color: Colors.white),
+                SizedBox(width: 8.w),
+                Expanded(child: Text(l10n.t('compression_success'))),
+              ],
+            ),
+            backgroundColor: AppTheme.successGreen,
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+          ),
+        );
+        tools.resetCompressionState();
+      });
+    }
 
     return ListView(
       padding: EdgeInsets.all(16.w),
@@ -49,34 +74,72 @@ class ProToolsScreen extends StatelessWidget {
             MaterialPageRoute(builder: (_) => const SmartCleanupScreen()),
           ),
         ),
+
+        // Fast Zip card with progress bar
         GlassPanel(
           margin: EdgeInsets.only(bottom: 10.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _Header(icon: Icons.archive_rounded, title: l10n.t('compress')),
+              _Header(icon: Icons.archive_rounded, title: l10n.t('fast_zip')),
               SizedBox(height: 8.h),
               Text('${files.selectedFiles.length} - ${formatBytes(files.totalBytes)}'),
               SizedBox(height: 10.h),
-              FilledButton.icon(
-                icon: tools.isCompressing
-                    ? SizedBox.square(
-                        dimension: 18.w,
-                        child: const CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.archive_rounded),
-                label: Text(l10n.t('compress')),
-                onPressed: tools.isCompressing
-                    ? null
-                    : () => tools.compress(files.selectedFiles),
-              ),
-              if (tools.zipPath != null) ...[
+              if (tools.isCompressing) ...[
+                Row(
+                  children: [
+                    Icon(Icons.compress_rounded,
+                        color: AppTheme.electricBlue, size: 18.sp),
+                    SizedBox(width: 8.w),
+                    Text(
+                      l10n.t('compressing'),
+                      style: TextStyle(
+                        color: AppTheme.electricBlue,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(height: 8.h),
-                SelectableText(tools.zipPath!),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(99),
+                  child: LinearProgressIndicator(
+                    value: tools.compressionProgress,
+                    minHeight: 8.h,
+                    backgroundColor: Colors.white.withValues(alpha: 0.1),
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      AppTheme.electricBlue,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  '${(tools.compressionProgress * 100).toStringAsFixed(0)}%',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12.sp,
+                  ),
+                ),
+              ] else
+                FilledButton.icon(
+                  icon: const Icon(Icons.archive_rounded),
+                  label: Text(l10n.t('compress')),
+                  onPressed: files.selectedFiles.isEmpty
+                      ? null
+                      : () => tools.compress(files.selectedFiles),
+                ),
+              if (tools.zipPath != null && !tools.isCompressing) ...[
+                SizedBox(height: 8.h),
+                SelectableText(
+                  tools.zipPath!,
+                  style: TextStyle(fontSize: 12.sp, color: Colors.white54),
+                ),
               ],
             ],
           ),
         ),
+
         GlassPanel(
           margin: EdgeInsets.only(bottom: 10.h),
           child: Column(

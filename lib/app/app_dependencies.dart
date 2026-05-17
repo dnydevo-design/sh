@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/services/ad_service.dart';
 import '../data/services/clipboard_sync_service.dart';
 import '../data/services/compression_service.dart';
 import '../data/services/file_picker_service.dart';
@@ -25,6 +26,7 @@ class AppDependencies {
         networkAddressService = const NetworkAddressService(),
         compressionService = const CompressionService(),
         clipboardSyncService = const ClipboardSyncService(),
+        adService = AdService(),
         vaultService = VaultService(),
         offlineChatService = OfflineChatService(),
         shakeDetectionService = ShakeDetectionService(),
@@ -45,6 +47,7 @@ class AppDependencies {
   final NetworkAddressService networkAddressService;
   final CompressionService compressionService;
   final ClipboardSyncService clipboardSyncService;
+  final AdService adService;
   final VaultService vaultService;
   final OfflineChatService offlineChatService;
   final ShakeDetectionService shakeDetectionService;

@@ -13,4 +13,15 @@ class AppConstants {
   static const themeModeKey = 'theme_mode';
   static const localeKey = 'locale';
   static const maxGroupPeers = 4;
+
+  // AdMob
+  static const admobAppId = 'ca-app-pub-6484339816605498~1941838489';
+  static const rewardedAdUnitId = 'ca-app-pub-6484339816605498/2713818509';
+
+  // Feature unlock keys (SharedPreferences)
+  static const ultraSpeedUnlockKey = 'ultra_speed_unlock_until';
+  static const fastZipUnlockKey = 'fast_zip_unlock_until';
+
+  // Support
+  static const supportPhoneNumber = '+201222719236';
 }

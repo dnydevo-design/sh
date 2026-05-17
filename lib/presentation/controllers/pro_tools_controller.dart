@@ -20,12 +20,16 @@ class ProToolsController extends ChangeNotifier {
 
   List<ScheduledTransfer> _scheduledTransfers = const [];
   bool _isCompressing = false;
+  double _compressionProgress = 0;
+  bool _compressionSuccess = false;
   String? _zipPath;
   String? _cameraState;
 
   List<ScheduledTransfer> get scheduledTransfers =>
       List.unmodifiable(_scheduledTransfers);
   bool get isCompressing => _isCompressing;
+  double get compressionProgress => _compressionProgress;
+  bool get compressionSuccess => _compressionSuccess;
   String? get zipPath => _zipPath;
   String? get cameraState => _cameraState;
 
@@ -39,10 +43,31 @@ class ProToolsController extends ChangeNotifier {
       return;
     }
     _isCompressing = true;
+    _compressionProgress = 0;
+    _compressionSuccess = false;
+    _zipPath = null;
     notifyListeners();
-    final zip = await _compressionService.zipFiles(files);
+
+    final zip = await _compressionService.zipFiles(
+      files,
+      onProgress: (progress) {
+        _compressionProgress = progress;
+        notifyListeners();
+      },
+    );
+
     _zipPath = zip.path;
     _isCompressing = false;
+    _compressionProgress = 1;
+    _compressionSuccess = true;
+    notifyListeners();
+  }
+
+  /// Reset compression state (e.g. after navigating away).
+  void resetCompressionState() {
+    _compressionSuccess = false;
+    _compressionProgress = 0;
+    _zipPath = null;
     notifyListeners();
   }
 
@@ -73,4 +98,3 @@ class ProToolsController extends ChangeNotifier {
     notifyListeners();
   }
 }
-

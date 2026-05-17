@@ -7,6 +7,8 @@ class AppTheme {
   static const electricBlue = Color(0xFF00E5FF);
   static const deepBlue = Color(0xFF2A7BFF);
   static const magenta = Color(0xFFFF2BD6);
+  static const neonOrange = Color(0xFFFF6D00);
+  static const successGreen = Color(0xFF00E676);
   static const lightSurface = Color(0xFFF6F8FB);
   static const darkPanel = Color(0xFF0A0D12);
 

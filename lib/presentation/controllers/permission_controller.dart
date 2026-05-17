@@ -48,9 +48,41 @@ class PermissionController extends ChangeNotifier {
   PermissionStep get currentStep => steps[_currentIndex];
   PermissionStatus? statusFor(PermissionKind kind) => _statuses[kind];
 
+  /// Loads permission state. If the onboarding flag is false, performs a live
+  /// check of all permissions and Bluetooth state. If everything is already
+  /// granted, the permission guard is bypassed entirely. If only some
+  /// permissions are granted, the wizard starts at the first missing step.
   Future<void> load() async {
     _isComplete =
         _preferences.getBool(AppConstants.permissionOnboardingKey) ?? false;
+
+    if (!_isComplete) {
+      // Live-check all permissions at the OS level
+      final allGranted = await _permissionService.areAllPermissionsGranted();
+      if (allGranted) {
+        // Also verify Bluetooth adapter is enabled
+        final btEnabled = await _permissionService.isBluetoothEnabled();
+        if (btEnabled) {
+          _isComplete = true;
+          await _preferences.setBool(
+            AppConstants.permissionOnboardingKey,
+            true,
+          );
+        }
+      }
+
+      if (!_isComplete) {
+        // Find the first permission step that is not yet granted and skip to it
+        final statuses = await _permissionService.checkAllStatuses();
+        for (var i = 0; i < steps.length; i++) {
+          if (statuses[steps[i].kind] != true) {
+            _currentIndex = i;
+            break;
+          }
+        }
+      }
+    }
+
     _isLoaded = true;
     notifyListeners();
   }
@@ -71,7 +103,21 @@ class PermissionController extends ChangeNotifier {
 
   Future<void> next() async {
     if (_currentIndex < steps.length - 1) {
-      _currentIndex++;
+      // Skip to the next un-granted step
+      final statuses = await _permissionService.checkAllStatuses();
+      var foundPending = false;
+      for (var i = _currentIndex + 1; i < steps.length; i++) {
+        if (statuses[steps[i].kind] != true) {
+          _currentIndex = i;
+          foundPending = true;
+          break;
+        }
+      }
+      if (!foundPending) {
+        // All remaining steps are already granted
+        _isComplete = true;
+        await _preferences.setBool(AppConstants.permissionOnboardingKey, true);
+      }
       notifyListeners();
       return;
     }
@@ -89,4 +135,3 @@ class PermissionController extends ChangeNotifier {
     notifyListeners();
   }
 }
-

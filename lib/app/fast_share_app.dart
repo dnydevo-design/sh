@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../core/l10n/fast_share_localizations.dart';
 import '../core/theme/app_theme.dart';
+import '../presentation/controllers/ad_controller.dart';
 import '../presentation/controllers/cleanup_controller.dart';
 import '../presentation/controllers/file_selection_controller.dart';
 import '../presentation/controllers/chat_controller.dart';
@@ -84,6 +85,12 @@ class FastShareApp extends StatelessWidget {
             dependencies.scheduledTransferService,
             dependencies.remoteCameraService,
           )..load(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AdController(
+            dependencies.adService,
+            dependencies.preferences,
+          ),
         ),
       ],
       child: Consumer<SettingsController>(

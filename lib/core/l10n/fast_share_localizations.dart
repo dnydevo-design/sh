@@ -115,6 +115,21 @@ class FastShareLocalizations {
       'open': 'Open',
       'remove': 'Remove',
       'retry': 'Retry',
+
+      // New strings — PRO features
+      'support': 'Support',
+      'support_abdullah': 'Support Abdullah by watching an ad',
+      'orange_cash': 'Orange Cash',
+      'copy_number': 'Copy Number',
+      'call_transfer': 'Call / Transfer',
+      'watch_ad': 'Watch Ad',
+      'supporter_badge': 'Supporter ⭐',
+      'ultra_speed': 'Ultra Speed',
+      'fast_zip': 'Fast Zip',
+      'fast_zip_send': 'Fast Zip & Send',
+      'compressing': 'Compressing...',
+      'compression_success': 'Compression Successful, Sending Now!',
+      'ad_reward_unlocked': 'Unlocked for 1 hour!',
     },
     'ar': {
       'app_name': 'فاست شير',
@@ -205,6 +220,21 @@ class FastShareLocalizations {
       'open': 'فتح',
       'remove': 'إزالة',
       'retry': 'إعادة المحاولة',
+
+      // New strings — PRO features
+      'support': 'دعم',
+      'support_abdullah': 'ادعم عبدالله بمشاهدة إعلان',
+      'orange_cash': 'أورانج كاش',
+      'copy_number': 'نسخ الرقم',
+      'call_transfer': 'اتصال / تحويل',
+      'watch_ad': 'شاهد إعلان',
+      'supporter_badge': 'داعم ⭐',
+      'ultra_speed': 'سرعة فائقة',
+      'fast_zip': 'الضغط الفوري',
+      'fast_zip_send': 'ضغط وإرسال',
+      'compressing': 'جار الضغط...',
+      'compression_success': 'تم الضغط بنجاح، جار الإرسال الآن!',
+      'ad_reward_unlocked': 'تم فتح الميزة لمدة ساعة!',
     },
   };
 }

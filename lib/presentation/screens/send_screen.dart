@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,9 +10,11 @@ import '../../core/l10n/l10n_extension.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/file_formatters.dart';
 import '../../domain/entities/peer_invite.dart';
+import '../../domain/entities/transfer_file.dart';
 import '../../domain/enums/file_category.dart';
 import '../controllers/file_selection_controller.dart';
 import '../controllers/profile_controller.dart';
+import '../controllers/pro_tools_controller.dart';
 import '../controllers/transfer_controller.dart';
 import '../widgets/file_tile.dart';
 import '../widgets/glass_panel.dart';
@@ -24,6 +28,7 @@ class SendScreen extends StatelessWidget {
     final files = context.watch<FileSelectionController>();
     final profile = context.watch<ProfileController>();
     final transfer = context.watch<TransferController>();
+    final tools = context.watch<ProToolsController>();
     final l10n = context.l10n;
     final invite = transfer.invite;
 
@@ -108,6 +113,19 @@ class SendScreen extends StatelessWidget {
           ),
         ),
         SizedBox(height: 16.h),
+
+        // Fast Zip & Send button — compresses first, then starts session
+        if (files.selectedFiles.length > 1) ...[
+          _FastZipSendButton(
+            files: files.selectedFiles,
+            tools: tools,
+            transfer: transfer,
+            profile: profile,
+            l10n: l10n,
+          ),
+          SizedBox(height: 10.h),
+        ],
+
         FilledButton.icon(
           icon: const Icon(Icons.bolt_rounded),
           label: Text(l10n.t('start_session')),
@@ -200,57 +218,124 @@ class SendScreen extends StatelessWidget {
   }
 }
 
-class _HeroPanel extends StatelessWidget {
-  const _HeroPanel({
-    required this.title,
-    required this.subtitle,
+/// A button that compresses selected files into a .zip, then starts the transfer.
+class _FastZipSendButton extends StatefulWidget {
+  const _FastZipSendButton({
+    required this.files,
+    required this.tools,
+    required this.transfer,
+    required this.profile,
+    required this.l10n,
   });
 
-  final String title;
-  final String subtitle;
+  final List<TransferFile> files;
+  final ProToolsController tools;
+  final TransferController transfer;
+  final ProfileController profile;
+  final dynamic l10n;
+
+  @override
+  State<_FastZipSendButton> createState() => _FastZipSendButtonState();
+}
+
+class _FastZipSendButtonState extends State<_FastZipSendButton> {
+  bool _isZipping = false;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(18.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.r),
-        gradient: const LinearGradient(
-          colors: [Color(0xFF051B22), Color(0xFF170019)],
-        ),
-        border: Border.all(color: Colors.white12),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 54.w,
-            height: 54.w,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [AppTheme.electricBlue, AppTheme.magenta],
-              ),
-            ),
-            child: const Icon(Icons.flash_on_rounded, color: Colors.black),
+    final tools = widget.tools;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        FilledButton.icon(
+          icon: _isZipping
+              ? SizedBox.square(
+                  dimension: 18.w,
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.black,
+                  ),
+                )
+              : const Icon(Icons.archive_rounded),
+          label: Text(widget.l10n.t('fast_zip_send')),
+          style: FilledButton.styleFrom(
+            backgroundColor: AppTheme.magenta,
+            foregroundColor: Colors.white,
           ),
-          SizedBox(width: 14.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
+          onPressed: _isZipping
+              ? null
+              : () async {
+                  setState(() => _isZipping = true);
+                  await tools.compress(widget.files);
+                  if (tools.zipPath != null && mounted) {
+                    // Show success message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          children: [
+                            const Icon(Icons.check_circle_rounded,
+                                color: Colors.white),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: Text(widget.l10n.t('compression_success')),
+                            ),
+                          ],
+                        ),
+                        backgroundColor: AppTheme.successGreen,
+                        behavior: SnackBarBehavior.floating,
+                        duration: const Duration(seconds: 2),
                       ),
-                ),
-                Text(subtitle, style: const TextStyle(color: Colors.white70)),
-              ],
+                    );
+
+                    // Create a TransferFile for the zip and start session
+                    final zipFile = TransferFile(
+                      id: 'zip-${DateTime.now().millisecondsSinceEpoch}',
+                      path: tools.zipPath!,
+                      name: tools.zipPath!.split('/').last,
+                      sizeBytes: await _getFileSize(tools.zipPath!),
+                      category: FileCategory.archives,
+                    );
+                    await widget.transfer.prepareSend(
+                      [zipFile],
+                      endpointName: widget.profile.endpointName,
+                    );
+                  }
+                  if (mounted) setState(() => _isZipping = false);
+                },
+        ),
+        if (_isZipping) ...[
+          SizedBox(height: 8.h),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(99),
+            child: LinearProgressIndicator(
+              value: tools.compressionProgress,
+              minHeight: 6.h,
+              backgroundColor: Colors.white.withValues(alpha: 0.1),
+              valueColor:
+                  const AlwaysStoppedAnimation<Color>(AppTheme.magenta),
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            '${widget.l10n.t("compressing")} ${(tools.compressionProgress * 100).toStringAsFixed(0)}%',
+            style: TextStyle(
+              color: AppTheme.magenta,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
-      ),
+      ],
     );
+  }
+
+  Future<int> _getFileSize(String path) async {
+    try {
+      final file = File(path);
+      return await file.length();
+    } catch (_) {
+      return 0;
+    }
   }
 }

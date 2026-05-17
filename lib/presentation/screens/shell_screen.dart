@@ -7,6 +7,7 @@ import 'receive_screen.dart';
 import 'radar_screen.dart';
 import 'send_screen.dart';
 import 'settings_screen.dart';
+import 'support_screen.dart';
 import 'transfer_dashboard_screen.dart';
 
 class ShellScreen extends StatefulWidget {
@@ -34,6 +35,15 @@ class _ShellScreenState extends State<ShellScreen> {
       appBar: AppBar(
         title: Text(l10n.t('app_name')),
         actions: [
+          IconButton(
+            tooltip: l10n.t('support'),
+            icon: const Icon(Icons.favorite_rounded),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SupportScreen()),
+              );
+            },
+          ),
           IconButton(
             tooltip: l10n.t('dashboard'),
             icon: const Icon(Icons.speed_rounded),
